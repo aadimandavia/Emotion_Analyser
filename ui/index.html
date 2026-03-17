@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emotion AI</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            width: 420px;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 5px;
+        }
+
+        p.sub {
+            margin-top: 0;
+            color: #666;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-top: 15px;
+            font-size: 14px;
+            resize: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #5a67d8;
+        }
+
+        .loader {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .result {
+            margin-top: 20px;
+            text-align: left;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f5f7ff;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 6px;
+            color: white;
+            font-size: 12px;
+        }
+
+        .high { background: #e53e3e; }
+        .medium { background: #dd6b20; }
+        .low { background: #38a169; }
+
+        .bar {
+            background: #eee;
+            border-radius: 6px;
+            height: 10px;
+            margin-top: 5px;
+        }
+
+        .bar-fill {
+            height: 10px;
+            border-radius: 6px;
+            background: #667eea;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>🌿 Emotion AI</h2>
+    <p class="sub">Understand → Decide → Guide</p>
+
+    <textarea id="text" rows="4" placeholder="How are you feeling today?"></textarea>
+
+    <button onclick="predict()">Analyze</button>
+
+    <div class="loader" id="loader">Analyzing...</div>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+async function predict() {
+
+    const text = document.getElementById("text").value;
+
+    if (!text) {
+        alert("Please enter something!");
+        return;
+    }
+
+    document.getElementById("loader").style.display = "block";
+    document.getElementById("result").innerHTML = "";
+
+    const data = {
+        journal_text: text,
+        ambience_type: "forest",
+        duration_min: 20,
+        sleep_hours: 6,
+        time_of_day: "morning",
+        previous_day_mood: "neutral",
+        face_emotion_hint: "calm_face",
+        reflection_quality: "clear"
+    };
+
+    const res = await fetch("http://127.0.0.1:8000/predict", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    document.getElementById("loader").style.display = "none";
+
+    // Emotion color
+    let color = "#333";
+    if (result.state === "calm") color = "#38a169";
+    else if (result.state === "focused") color = "#3182ce";
+    else if (result.state === "overwhelmed") color = "#e53e3e";
+    else if (result.state === "restless") color = "#dd6b20";
+
+    // Intensity badge
+    let intensityClass = "low";
+    if (result.intensity >= 4) intensityClass = "high";
+    else if (result.intensity === 3) intensityClass = "medium";
+
+    // Uncertainty warning
+    let warning = "";
+    if (result.confidence < 0.6) {
+        warning = "<p style='color:red;'>⚠️ Low confidence — interpretation may be uncertain</p>";
+    }
+
+    document.getElementById("result").innerHTML = `
+        <h3 style="color:${color}">${result.state.toUpperCase()}</h3>
+
+        <span class="badge ${intensityClass}">
+            Intensity: ${result.intensity}
+        </span>
+
+        <p><b>Action:</b> ${result.action}</p>
+        <p><b>When:</b> ${result.timing}</p>
+
+        <p><b>Confidence:</b> ${result.confidence.toFixed(2)}</p>
+
+        <div class="bar">
+            <div class="bar-fill" style="width:${result.confidence * 100}%"></div>
+        </div>
+
+        ${warning}
+
+        <hr>
+
+        <p><b>💬 Message:</b><br>${result.message}</p>
+    `;
+}
+</script>
+
+</body>
+</html>
