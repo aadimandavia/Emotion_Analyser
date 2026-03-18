@@ -1,9 +1,9 @@
-# 🌿 ArvyaX ML Internship Assignment
+# ArvyaX ML Internship Assignment
 ## Emotion Understanding → Decision → Guidance System
 
 ---
 
-## 📌 Overview
+## Overview
 
 Most AI systems stop at prediction. This one goes further.
 
@@ -13,7 +13,7 @@ It's not just a classifier. It's a hybrid ML + reasoning system built to actuall
 
 ---
 
-## 🎯 What the System Does
+## What the System Does
 
 The pipeline handles four interconnected tasks:
 
@@ -34,7 +34,7 @@ The pipeline handles four interconnected tasks:
 
 ---
 
-## 🧠 System Architecture
+## System Architecture
 ```
 User Input (journal entry + contextual metadata)
         ↓
@@ -62,7 +62,7 @@ Final Output
 
 ---
 
-## ⚙️ Tech Stack
+## Tech Stack
 
 | Layer | Tool |
 |---|---|
@@ -74,7 +74,7 @@ Final Output
 
 ---
 
-## 📊 Feature Engineering
+## Feature Engineering
 
 The system combines three types of features to build a rich picture of the user's state:
 
@@ -96,7 +96,7 @@ The system combines three types of features to build a rich picture of the user'
 
 ---
 
-## 🤖 Models at a Glance
+## Models at a Glance
 
 | Task | Model | Type |
 |---|---|---|
@@ -111,7 +111,7 @@ The system combines three types of features to build a rich picture of the user'
 
 ---
 
-## 🧩 Decision Engine — The Core Innovation
+## Decision Engine — The Core Innovation
 
 The decision layer isn't just another model. It's a **three-layer hybrid**:
 
@@ -130,7 +130,7 @@ This layered design means the system degrades gracefully — even when the ML mo
 
 ---
 
-## 🔍 Uncertainty Modeling
+## Uncertainty Modeling
 
 - **Confidence** = the maximum class probability from the model's output
 - **Uncertain** = flagged when confidence < 0.5
@@ -139,7 +139,7 @@ On top of this, a **semantic calibration layer** reads the text for uncertainty 
 
 ---
 
-## 🧪 Ablation Study
+## Ablation Study
 
 | Feature Set | Result |
 |---|---|
@@ -150,7 +150,7 @@ Adding structured metadata (stress levels, sleep hours, energy) dramatically imp
 
 ---
 
-## ⚠️ Known Failure Cases & How We Handle Them
+## Known Failure Cases & How We Handle Them
 
 | Failure Case | Example | Mitigation |
 |---|---|---|
@@ -161,7 +161,7 @@ Adding structured metadata (stress levels, sleep hours, energy) dramatically imp
 
 ---
 
-## 📱 Edge / Deployment Considerations
+## Edge / Deployment Considerations
 
 For on-device or low-latency deployment, the following trade-offs apply:
 
@@ -179,7 +179,7 @@ For on-device or low-latency deployment, the following trade-offs apply:
 
 ---
 
-## 🛠️ How to Run
+##  How to Run
 
 **1. Install dependencies**
 ```bash
@@ -203,7 +203,7 @@ http://127.0.0.1:8000
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 ```
 Emotion-Analyser/
 │
@@ -226,7 +226,7 @@ Emotion-Analyser/
 
 ---
 
-## 🌟 Key Highlights
+## Key Highlights
 
 - ✅ Handles noisy, real-world journal data gracefully
 - ✅ Hybrid ML + rule-based reasoning for robust decisions
