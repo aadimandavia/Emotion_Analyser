@@ -218,8 +218,8 @@ Emotion-Analyser/
 ├── app/
 │   └── main.py         # FastAPI application
 │
-├── templates/          # HTML templates
-├── static/             # CSS and JS assets
+├── Ui/
+|   └── index.html      # Simple Frontend
 ├── outputs/            # Prediction outputs and logs
 └── README.md
 ```
