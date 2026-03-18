@@ -1,238 +1,239 @@
-🌿 ArvyaX ML Internship Assignment
+# 🌿 ArvyaX ML Internship Assignment
+## Emotion Understanding → Decision → Guidance System
 
-Emotion Understanding → Decision → Guidance System
+---
 
-📌 Overview
+## 📌 Overview
 
-This project builds an intelligent system that goes beyond prediction.
-It understands human emotional signals from noisy reflections and recommends meaningful actions.
+Most AI systems stop at prediction. This one goes further.
 
-The system is designed as a hybrid AI pipeline combining machine learning + reasoning.
+**ArvyaX** is an intelligent pipeline that reads noisy human reflections — like journal entries written at the end of a long day — and transforms them into structured emotional understanding, reasoned decisions, and meaningful, human-like guidance.
 
-🎯 Objectives
+It's not just a classifier. It's a hybrid ML + reasoning system built to actually help people.
 
-The system performs:
+---
 
-Emotional Understanding
+## 🎯 What the System Does
 
-Predict emotional state
+The pipeline handles four interconnected tasks:
 
-Predict intensity (1–5)
+**1. Emotional Understanding**
+- Predicts the user's emotional state (e.g., anxious, calm, overwhelmed)
+- Estimates emotional intensity on a scale of 1–5
 
-Decision Layer
+**2. Decision Layer**
+- Recommends what the user should do
+- Suggests *when* they should do it
 
-What should the user do?
+**3. Uncertainty Awareness**
+- Outputs a confidence score per prediction
+- Flags low-confidence outputs so the user knows when to take guidance with a grain of salt
 
-When should they do it?
+**4. Supportive Feedback**
+- Generates a warm, human-like message — not a robotic label
 
-Uncertainty Awareness
+---
 
-Confidence score
-
-Uncertainty flag
-
-Supportive Feedback
-
-Human-like guidance message
-
-🧠 System Architecture
-User Input (journal + context)
+## 🧠 System Architecture
+```
+User Input (journal entry + contextual metadata)
         ↓
-Preprocessing (TF-IDF + encoding)
+Preprocessing
+  └── TF-IDF vectorization + categorical encoding
         ↓
-ML Models:
-   - Emotion (classification)
-   - Intensity (classification)
-   - Stress (regression/classification)
-   - Energy (regression/classification)
+ML Models
+  ├── Emotion Classifier
+  ├── Intensity Classifier
+  ├── Stress Model (regression/classification)
+  └── Energy Model (regression/classification)
         ↓
 Semantic Correction Layer
+  └── Adjusts predictions based on text tone signals
         ↓
-Hybrid Decision Engine:
-   ML Action Model + Rule-based Reasoning
+Hybrid Decision Engine
+  ├── ML Action Model (learned from pseudo-labels)
+  └── Rule-Based Reasoning (edge cases + safety overrides)
         ↓
 Confidence Calibration
         ↓
-Final Output (Action + Timing + Message)
-⚙️ Tech Stack
+Final Output
+  └── Recommended action + timing + supportive message
+```
 
-Python
+---
 
-scikit-learn
+## ⚙️ Tech Stack
 
-RandomForest
+| Layer | Tool |
+|---|---|
+| Language | Python |
+| ML Models | scikit-learn (RandomForest) |
+| Text Features | TF-IDF Vectorizer |
+| API | FastAPI |
+| UI | HTML + CSS |
 
-TF-IDF Vectorizer
+---
 
-FastAPI (API)
+## 📊 Feature Engineering
 
-HTML + CSS (UI)
+The system combines three types of features to build a rich picture of the user's state:
 
-📊 Feature Engineering
-Text Features
+**Text Features**
+- TF-IDF with `max_features=500` — captures emotionally meaningful words from journal entries
 
-TF-IDF (max_features=500)
+**Categorical Features** *(one-hot encoded)*
+- `ambience_type` — the environment the user was in
+- `time_of_day` — morning / afternoon / evening / night
+- `previous_day_mood` — yesterday's emotional state
+- `face_emotion_hint` — optional visual cue from camera
+- `reflection_quality` — coherence of the journal entry
 
-Captures key emotional words
+**Numerical Features**
+- `sleep_hours`
+- `duration_min`
+- `energy_level`
+- `stress_level`
 
-Categorical Features
+---
 
-ambience_type
+## 🤖 Models at a Glance
 
-time_of_day
+| Task | Model | Type |
+|---|---|---|
+| Emotional State | RandomForest | Classification |
+| Intensity (1–5) | RandomForest | Classification |
+| Stress Level | RandomForest | Regression / Classification |
+| Energy Level | RandomForest | Regression / Classification |
+| Recommended Action | RandomForest | Classification |
 
-previous_day_mood
+> **Why classification for intensity?**
+> Intensity is a discrete 1–5 scale, so it naturally fits a multi-class classification approach rather than continuous regression. This keeps outputs interpretable and consistent.
 
-face_emotion_hint
+---
 
-reflection_quality
+## 🧩 Decision Engine — The Core Innovation
 
-(Encoded using one-hot encoding)
+The decision layer isn't just another model. It's a **three-layer hybrid**:
 
-Numerical Features
+**Layer 1 — ML Action Model**
+Learns patterns from pseudo-labeled training data to recommend context-appropriate actions.
 
-sleep_hours
+**Layer 2 — Rule-Based Reasoning**
+Ensures logical consistency and handles edge cases that confuse the ML model.
 
-duration_min
+**Layer 3 — Safety Overrides**
+Hard rules that activate in high-risk situations:
+- High stress detected → recommend grounding exercises
+- Low energy detected → recommend rest before anything else
 
-energy_level
+This layered design means the system degrades gracefully — even when the ML model is uncertain, the rules keep recommendations sensible.
 
-stress_level
+---
 
-🤖 Models Used
-Task	Model	Type
-Emotional State	RandomForest	Classification
-Intensity	RandomForest	Classification
-Stress	RandomForest	Regression/Classification
-Energy	RandomForest	Regression/Classification
-Action	RandomForest	Classification
-🧩 Why Classification for Intensity?
+## 🔍 Uncertainty Modeling
 
-Intensity is discrete (1–5), so it is treated as a multi-class classification problem rather than regression.
+- **Confidence** = the maximum class probability from the model's output
+- **Uncertain** = flagged when confidence < 0.5
 
-🧠 Decision Engine (Core Innovation)
+On top of this, a **semantic calibration layer** reads the text for uncertainty signals (hedging language, ambiguity, contradiction) and adjusts the confidence score accordingly — so the output reflects both model certainty *and* input quality.
 
-The system uses a hybrid approach:
+---
 
-1. ML Action Model
+## 🧪 Ablation Study
 
-Learns patterns from pseudo-labels
+| Feature Set | Result |
+|---|---|
+| Text features only | Moderate performance |
+| Text + Metadata | Significantly better ✅ |
 
-2. Rule-Based Reasoning
+Adding structured metadata (stress levels, sleep hours, energy) dramatically improves the quality of predictions. Raw text alone just doesn't capture enough signal.
 
-Ensures logical consistency
+---
 
-Handles edge cases
+## ⚠️ Known Failure Cases & How We Handle Them
 
-3. Safety Overrides
+| Failure Case | Example | Mitigation |
+|---|---|---|
+| Short / empty text | *"ok", "fine"* | Detected → confidence flagged low |
+| Ambiguous emotion | *"I feel weird"* | Semantic calibration layer applied |
+| Conflicting signals | *"tired but happy"* | Hybrid decision engine reconciles |
+| Noisy labels | Same text → different labels | Semantic correction + calibration |
 
-High stress → grounding
+---
 
-Low energy → rest
+## 📱 Edge / Deployment Considerations
 
-🔍 Uncertainty Modeling
+For on-device or low-latency deployment, the following trade-offs apply:
 
-Confidence = max probability from model
+| Factor | Trade-off |
+|---|---|
+| Accuracy | vs. Speed |
+| Model size | vs. Performance |
 
-Uncertain if confidence < 0.5
+**Recommended path for production:**
+- Replace RandomForest with **LightGBM / XGBoost** (faster, lighter)
+- Or swap in a small neural model
+- Reduce TF-IDF features from 500 → ~100–200
+- Apply quantization for edge hardware
+- Enable batch inference where possible
 
-Enhancement:
+---
 
-A semantic calibration layer adjusts confidence based on text signals.
+## 🛠️ How to Run
 
-🧪 Ablation Study
-Model	Performance
-Text only	Moderate
-Text + Metadata	Significantly better ✅
-
-👉 Metadata (stress, energy, sleep) greatly improves predictions.
-
-⚠️ Error Analysis
-Common Failure Cases
-
-Short Text
-
-"ok", "fine"
-
-No signal → low confidence
-
-Ambiguous Emotion
-
-"I feel weird"
-
-Model confused between classes
-
-Conflicting Signals
-
-"tired but happy"
-
-Mixed predictions
-
-Noisy Labels
-
-Same text → different labels in dataset
-
-🧠 Improvements Applied
-
-Semantic correction layer (text-aware)
-
-Confidence calibration
-
-Hybrid decision system
-
-Safety override logic
-
-📱 Edge / Deployment Plan
-On-device deployment:
-
-Replace RandomForest with:
-
-LightGBM / XGBoost (optimized)
-
-OR small neural model
-
-Optimizations:
-
-Reduce TF-IDF features
-
-Quantization
-
-Batch inference
-
-Trade-offs:
-Factor	Tradeoff
-Accuracy	vs Speed
-Model size	vs performance
-🛠️ How to Run
-1. Install dependencies
+**1. Install dependencies**
+```bash
 pip install -r requirements.txt
-2. Train models
+```
+
+**2. Train models**
+```bash
 python src/train.py
-3. Run API
+```
+
+**3. Start the API**
+```bash
 uvicorn app.main:app --reload
-4. Open UI
+```
+
+**4. Open the UI**
+```
 http://127.0.0.1:8000
-📁 Project Structure
+```
+
+---
+
+## 📁 Project Structure
+```
 Emotion-Analyser/
 │
-├── data/
-├── models/
+├── data/               # Raw and processed datasets
+├── models/             # Saved trained models
+│
 ├── src/
-│   ├── preprocess.py
-│   ├── train.py
-│   ├── predict.py
+│   ├── preprocess.py   # Feature engineering + encoding
+│   ├── train.py        # Model training pipeline
+│   └── predict.py      # Inference logic
 │
 ├── app/
-│   ├── main.py
+│   └── main.py         # FastAPI application
 │
-├── templates/
-├── static/
-├── outputs/
+├── templates/          # HTML templates
+├── static/             # CSS and JS assets
+├── outputs/            # Prediction outputs and logs
 └── README.md
-🌟 Key Highlights
+```
 
-✅ Handles noisy real-world data
-✅ Hybrid ML + reasoning system
-✅ Uncertainty-aware predictions
-✅ Product-oriented decision making
-✅ End-to-end pipeline + UI
+---
+
+## 🌟 Key Highlights
+
+- ✅ Handles noisy, real-world journal data gracefully
+- ✅ Hybrid ML + rule-based reasoning for robust decisions
+- ✅ Uncertainty-aware — the system knows when it doesn't know
+- ✅ Product-oriented design with end-user guidance in mind
+- ✅ Full pipeline from raw input to UI — nothing left out
+
+---
+
+*Built as part of the ArvyaX ML Internship Program.*
