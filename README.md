@@ -226,13 +226,7 @@ Emotion-Analyser/
 
 ---
 
-## Key Highlights
 
-- ✅ Handles noisy, real-world journal data gracefully
-- ✅ Hybrid ML + rule-based reasoning for robust decisions
-- ✅ Uncertainty-aware — the system knows when it doesn't know
-- ✅ Product-oriented design with end-user guidance in mind
-- ✅ Full pipeline from raw input to UI — nothing left out
 
 ---
 
